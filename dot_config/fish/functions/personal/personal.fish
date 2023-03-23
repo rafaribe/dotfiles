@@ -1,0 +1,2 @@
+# Bat
+alias bat="batcat"

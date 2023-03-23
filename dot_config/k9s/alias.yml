@@ -1,0 +1,12 @@
+# $XDG_CONFIG_HOME/k9s/alias.yml
+alias:
+  sec: v1/secrets
+  sm: monitoring.coreos.com/v1/servicemonitors
+  ss: apps/v1/statefulsets
+  ir: traefik.containo.us/v1alpha1/IngressRoute
+  irtcp: traefik.containo.us/v1alpha1/IngressRouteTCP
+  irudp: traefik.containo.us/v1alpha1/IngressRouteUDP
+  pgc: postgresql.cnpg.io/v1/Cluster
+  orp: source.toolkit.fluxcd.io/v1beta2/OCIRepository
+  hrp: source.toolkit.fluxcd.io/v1beta2/HelmRepository
+  
