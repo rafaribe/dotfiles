@@ -1,0 +1,47 @@
+set -x LANG en_US.UTF-8
+
+# Generated for envman. Do not edit.
+test -s "$HOME/.config/envman/load.fish"; and source "$HOME/.config/envman/load.fish"
+
+{{ if eq .chezmoi.os "linux" }}
+eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+{{ end }}
+
+
+# Source Aliases Folder
+for file in ~/.config/fish/alias/*.fish
+    source $file
+end
+
+for file in ~/.config/fish/functions/custom/*.fish
+    source $file
+end
+
+starship init fish | source
+set -x STARSHIP_CONFIG ~/.config/starship/starship.toml
+set -x TALOSCONFIG ~/code/rafaribe/home-ops/infrastructure/talos/clusterconfig/talosconfig
+# Completions
+
+flux completion fish | source
+#kubectl completion fish | source
+
+set -x EDITOR "code --wait"
+set -x SOPS_AGE_KEY_FILE ~/.config/sops/age/keys.txt
+
+{{ if eq .chezmoi.os "darwin" }}
+fish_add_path $HOME/.bin/
+fish_add_path /Users/rafaribe/.krew/bin
+
+{{ end }}
+
+{{ if eq .chezmoi.os "darwin" }}
+for file in ~/.config/fish/functions/work/*.fish
+    source $file
+end
+{{ end }}
+
+{{ if eq .chezmoi.os "linux" }}
+for file in ~/.config/fish/functions/personal/*.fish
+    source $file
+end
+{{ end }}

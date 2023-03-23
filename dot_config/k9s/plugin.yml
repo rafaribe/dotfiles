@@ -1,0 +1,158 @@
+# $HOME/.k9s/plugin.yml
+# move selected line to chosen resource in K9s, then:
+# Shift-T (with confirmation) to toggle helm releases or kustomizations suspend and resume
+# Shift-R (no confirmation) to reconcile a git source or a helm release or a kustomization
+plugin:
+  toggle-helmrelease:
+    shortCut: Shift-T
+    confirm: true
+    scopes:
+      - helmreleases
+    description: Toggle to suspend or resume a HelmRelease
+    command: sh
+    background: false
+    args:
+      - -c
+      - "flux --context $CONTEXT $([ $(kubectl --context $CONTEXT get helmreleases -n $NAMESPACE $NAME -o=custom-columns=TYPE:.spec.suspend | tail -1) = \"true\" ] && echo \"resume\" || echo \"suspend\") helmrelease -n $NAMESPACE $NAME | less"
+  toggle-kustomization:
+    shortCut: Shift-T
+    confirm: true
+    scopes:
+      - kustomizations
+    description: Toggle to suspend or resume a Kustomization
+    command: sh
+    background: false
+    args:
+      - -c
+      - "flux --context $CONTEXT $([ $(kubectl --context $CONTEXT get kustomizations -n $NAMESPACE $NAME -o=custom-columns=TYPE:.spec.suspend | tail -1) = \"true\" ] && echo \"resume\" || echo \"suspend\") kustomization -n $NAMESPACE $NAME | less"
+  reconcile-git:
+    shortCut: Shift-R
+    confirm: false
+    description: Flux reconcile
+    scopes:
+    - gitrepositories
+    command: sh
+    background: false
+    args:
+    - -c
+    - "flux --context $CONTEXT reconcile source git -n $NAMESPACE $NAME | less"
+  reconcile-hr:
+    shortCut: Shift-R
+    confirm: false
+    description: Flux reconcile
+    scopes:
+    - helmreleases
+    command: sh
+    background: false
+    args:
+    - -c
+    - "flux --context $CONTEXT reconcile helmrelease -n $NAMESPACE $NAME | less"
+  reconcile-ks:
+    shortCut: Shift-R
+    confirm: false
+    description: Flux reconcile
+    scopes:
+    - kustomizations
+    command: sh
+    background: false
+    args:
+    - -c
+    - "flux --context $CONTEXT reconcile kustomization -n $NAMESPACE $NAME | less"
+  trace:
+    shortCut: Shift-A
+    confirm: false
+    description: Flux trace
+    scopes:
+    - all
+    command: sh
+    background: false
+    args:
+    - -c
+    - "flux --context $CONTEXT trace $NAME --kind `echo $RESOURCE_NAME | sed -E 's/(s|es)$//g'` --api-version $RESOURCE_GROUP/$RESOURCE_VERSION --namespace $NAMESPACE $NAME | less"
+  dive:
+    shortCut: d
+    confirm: false
+    description: "Dive image"
+    scopes:
+      - containers
+    command: dive
+    background: false
+    args:
+      - $COL-IMAGE
+  #get all resources in a namespace using the krew get-all plugin
+  get-all:
+    shortCut: g
+    confirm: false
+    description: get-all
+    scopes:
+    - all
+    command: sh
+    background: false
+    args:
+    - -c
+    - "kubectl get-all -n $NAMESPACE | less"
+  watch-events:
+    shortCut: Shift-E
+    confirm: false
+    description: Get Events
+    scopes:
+    - all
+    command: sh
+    background: false
+    args:
+    - -c
+    - "watch -n 5 kubectl get events --context $CONTEXT --namespace $NAMESPACE --field-selector involvedObject.name=$NAME"
+  stern:
+    shortCut: Ctrl-L
+    confirm: false
+    description: "Logs <Stern>"
+    scopes:
+      - pods
+    command: stern
+    background: false
+    args:
+      - --tail
+      - 50
+      - $FILTER
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
+  helm-values:
+    shortCut: v
+    confirm: false
+    description: Values
+    scopes:
+    - helm
+    command: sh
+    background: false
+    args:
+    - -c
+    - "helm get values $COL-NAME -n $NAMESPACE --kube-context $CONTEXT | less"
+  jqlogs:
+    shortCut: Ctrl-J
+    confirm: false
+    description: "Logs (jq)"
+    scopes:
+      - po
+    command: kubectl
+    background: false
+    args:
+      - jq
+      - $NAME
+      - $NAMESPACE
+      - $CONTEXT
+  images:
+    shortCut: Ctrl-V
+    confirm: false
+    description: get images
+    scopes:
+    - pods
+    command: kubectl
+    background: false
+    args:
+    - images
+    - -n
+    - $NAMESPACE
+    - --context
+    - $CONTEXT
