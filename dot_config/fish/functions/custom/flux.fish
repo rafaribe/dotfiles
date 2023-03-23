@@ -4,20 +4,20 @@ function frt --description "frt authentik will run flux reconcile source oci ter
     set argument $argv[1]
     flux reconcile source oci terraform-$argument-oci | sed -n '/frt/{s/.*"\(.*\)".*/\1/p;q;}'
 end
-
-function fr --description "fr home-ops-kubernetes will reconcile the source home-ops-kubernetes"
+#description "fr home-ops-kubernetes will reconcile the source home-ops-kubernetes"
+function fr 
     set argument $argv[1]
     flux reconcile source git $argument
 end
-
-function frh --description "flux reload helmrelease - executes suspend and resume on a given helmrelease | args: release and namespace"
+# description "flux reload helmrelease - executes suspend and resume on a given helmrelease | args: release and namespace"
+function frh 
     set helmrelease $argv[1]
     set namespace $argv[2]
     flux suspend hr $helmrelease -n $namespace
     flux resume hr $helmrelease -n $namespace
 end
-
-function frk --description "flux reload kustomization - executes suspend and resume on a given kustomization. | args: kustomization and namespace"
+#  description "flux reload kustomization - executes suspend and resume on a given kustomization. | args: kustomization and namespace"
+function frk
     set ks $argv[1]
     set namespace $argv[2]
     flux suspend hr $ks -n $namespace
