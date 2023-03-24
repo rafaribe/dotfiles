@@ -32,9 +32,9 @@ set -x SOPS_AGE_KEY_FILE ~/.config/sops/age/keys.txt
 
 {{ if eq .chezmoi.os "darwin" }}
 fish_add_path $HOME/.bin/
-fish_add_path /Users/rafaribe/.krew/bin
-
 {{ end }}
+
+fish_add_path $HOME/.krew/bin
 
 {{ if eq .chezmoi.os "darwin" }}
 for file in ~/.config/fish/functions/work/*.fish
@@ -44,6 +44,7 @@ alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 {{ end }}
 
 {{ if eq .chezmoi.os "linux" }}
+
 for file in ~/.config/fish/functions/personal/*.fish
     source $file
 end
