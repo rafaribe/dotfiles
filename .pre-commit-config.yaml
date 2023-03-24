@@ -1,0 +1,7 @@
+---
+fail_fast: false
+repos:
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.16.1
+    hooks:
+      - id: gitleaks
