@@ -8,5 +8,4 @@ alias:
   irudp: traefik.containo.us/v1alpha1/IngressRouteUDP
   pgc: postgresql.cnpg.io/v1/Cluster
   orp: source.toolkit.fluxcd.io/v1beta2/OCIRepository
-  hrp: source.toolkit.fluxcd.io/v1beta2/HelmRepository
-  
+  hrp: source.toolkit.fluxcd.io/v1beta2/helmrepositories
