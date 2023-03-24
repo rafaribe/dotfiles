@@ -3,9 +3,16 @@ alias:
   sec: v1/secrets
   sm: monitoring.coreos.com/v1/servicemonitors
   ss: apps/v1/statefulsets
-  ir: traefik.containo.us/v1alpha1/IngressRoute
-  irtcp: traefik.containo.us/v1alpha1/IngressRouteTCP
-  irudp: traefik.containo.us/v1alpha1/IngressRouteUDP
-  pgc: postgresql.cnpg.io/v1/Cluster
-  orp: source.toolkit.fluxcd.io/v1beta2/OCIRepository
+  ir: traefik.containo.us/v1alpha1/ingressroutes
+  irtcp: traefik.containo.us/v1alpha1/ingressroutestcps
+  irudp: traefik.containo.us/v1alpha1/ingressroutesudps
+  pgc: postgresql.cnpg.io/v1/clusters
+  grp: source.toolkit.fluxcd.io/v1beta2/gitrepositories
+  orp: source.toolkit.fluxcd.io/v1beta2/ocirepositories
   hrp: source.toolkit.fluxcd.io/v1beta2/helmrepositories
+  otc: opentelemetry.io/otelcollectors
+  oti: opentelemetry.io/instrumentations
+  crt: certmanager.io/certificates
+  cor: acme.cert-manager.io/orders
+  csr: certmanager.io/certificaterequests
+  slc: slack.stakater.io/channels
