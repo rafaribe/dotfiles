@@ -38,6 +38,7 @@ fish_add_path /Users/rafaribe/.krew/bin
 for file in ~/.config/fish/functions/work/*.fish
     source $file
 end
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 {{ end }}
 
 {{ if eq .chezmoi.os "linux" }}
