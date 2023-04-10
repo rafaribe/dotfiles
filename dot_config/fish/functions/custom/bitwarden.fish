@@ -5,13 +5,16 @@ function unlock_bw_if_locked
     end
 end
 
-function load_github
+function reload_bitwarden
+    bw logout
+    rm ~/.bw_session
+    omf reload
+end
+
+function load_tokens
+    set -l GITLAB_UUID "ba81e9c2-b042-4aab-b98f-ae57013c9920"
     unlock_bw_if_locked
-  
-    set -l github_pat_id $BITWARDEN_GIST_ID
-    set -l github_token
-    set -l github_token "$(bw get notes $github_pat_id)"
-    export GITHUB_OAUTH_TOKEN="$github_token"
-    export GITHUB_TOKEN="$github_token"
-    export GIT_TOKEN="$github_token"
-  end
+    set -gx GITHUB_TOKEN "$(bw get item github | jq -r '.fields[] | select(.name == "GITHUB_TOKEN").value')"
+    set -gx GITLAB_TOKEN "$(bw get item $GITLAB_UUID | jq -r '.fields[] | select(.name == "GITLAB_TOKEN").value')"
+end
+
