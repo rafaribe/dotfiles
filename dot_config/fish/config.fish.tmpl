@@ -6,7 +6,8 @@ test -s "$HOME/.config/envman/load.fish"; and source "$HOME/.config/envman/load.
 {{ if eq .chezmoi.os "linux" }}
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 {{ end }}
-# Source Private BW file 
+# Source Private BW file
+# A file without any values can be seen at ~/.config/fish/functions/no_load/bw.fish
 source ~/.config/fish/functions/bw/bw.fish
 
 # Source Aliases Folder
