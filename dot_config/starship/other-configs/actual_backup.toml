@@ -1,0 +1,250 @@
+########################################
+# prompt global settings
+########################################
+
+# document link: https://starship.rs/ja-JP/config/#%E3%83%95%E3%82%9A%E3%83%AD%E3%83%B3%E3%83%95%E3%82%9A%E3%83%88
+# format = "$all"
+format = """
+$username\
+$hostname\
+$shlvl\
+$directory\
+${custom.giturl}\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$hg_branch\
+$docker_context\
+$package\
+$cmake\
+$dart\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$golang\
+$helm\
+$java\
+$julia\
+$nim\
+$nodejs\
+$ocaml\
+$perl\
+$php\
+$purescript\
+$python\
+$ruby\
+$rust\
+$swift\
+$terraform\
+$zig\
+$nix_shell\
+$conda\
+$memory_usage\
+$aws\
+$gcloud\
+$env_var\
+$crystal\
+$cmd_duration\
+$custom\
+$line_break\
+$jobs\
+
+$status\
+$character\
+"""
+
+right_format="""
+$kubernetes
+$time\
+$cmd_duration
+"""
+add_newline = false
+
+########################################
+# prompt detail settings
+########################################
+
+[username]
+disabled = false
+show_always = true
+style_user = "red bold"
+style_root = "red bold"
+# format = "user: [$user]($style) "
+
+[directory]
+truncation_length = 0
+truncate_to_repo = true
+
+## Git settings
+[git_branch]
+style = "bold purple"
+# symbol = "🌱 "
+truncation_length = 100  # no truncation
+truncation_symbol = "..."
+
+[git_status]
+modified = "M"
+untracked = "U"
+deleted = "🗑 "
+renamed = "👅"
+conflicted = "🏳 "
+ahead = "⇡"  # unpushed commit
+behind = "😰"
+diverged = "😵"
+
+[git_state]
+cherry_pick = "🍒 PICKING"
+
+[custom.giturl]
+# disabled = true
+description = "Display symbol for remote Git server"
+command = "check-git-remote"
+when = 'git rev-parse --is-inside-work-tree 2> /dev/null'
+shell = ["bash", "--noprofile", "--norc"]
+format = "at $output  "
+
+### Computer Stuff
+
+## Memory
+[memory_usage]
+disabled = true
+threshold = 1
+show_percentage = false
+show_swap = true
+# style = "bold dimmed green"
+style = "bold gray"
+
+# doc: https://starship.rs/config/#jobs
+[jobs]
+disabled = false
+symbol = "🏃‍♂️ "
+threshold = 1
+
+[battery]
+disabled = false
+# full_symbol = "🔋"
+charging_symbol = "⚡"
+discharging_symbol = "🔋 "
+[[battery.display]]
+threshold = 70
+style = "bold green"
+
+[time]
+disabled = false
+# format = "🕙[ \[$time\] ]($style)"
+format = "[$time]($style) "
+style = "bold green"
+use_12hr = false
+time_format = "%T"
+utc_time_offset = "+0"
+time_range="-"  # always: time_range="00:00:00-23:59:59"
+
+[line_break]
+disabled = true # separate prompt into 2 lines
+
+[os.symbols]
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "﯑ "
+Gentoo = " "
+HardenedBSD = "ﲊ "
+Illumos = " "
+Linux = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = " "
+openSUSE = " "
+OracleLinux = " "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = " "
+Solus = "ﴱ "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = " "
+
+
+[character]
+# symbol = "🍺"
+disabled = false
+success_symbol = "[➜](bold green)" 
+error_symbol = "[✗](bold red) "
+
+
+[cmd_duration]
+min_time = 500
+format = '🕙 [$duration](bold yellow)'
+
+### DevOps Stuff
+
+[kubernetes]
+disabled = false
+symbol = "ﴱ "
+format = 'on [⎈ ($namespace/$context)](bold blue) '
+
+[docker_context]
+symbol = " "
+style = "bg:#06969A"
+format = '[ $symbol $context ]($style) $path'
+
+### Programming Languages
+
+
+[rust]
+symbol = ""
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[java]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[golang]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+########################################
+# disabled: prompt detail settings
+########################################
+
+[gcloud]
+disabled = true
+
+[aws]
+# format = "on [$symbol$profile(\($region\))]($style) ""
+disabled = true
+format = ""
+style = "bold blue"
+symbol = "AWS Region: "
+
+[aws.region_aliases]
+# ap-northeast-1 = "an1"
+ap-southeast-2 = "au"
+us-east-1 = "va"
+
