@@ -35,6 +35,7 @@ fish_add_path $HOME/.bin/
 {{ end }}
 
 fish_add_path $HOME/.krew/bin
+fish_add_path $HOME/.cosmo/bin
 
 {{ if eq .chezmoi.os "darwin" }}
 for file in ~/.config/fish/functions/work/*.fish
