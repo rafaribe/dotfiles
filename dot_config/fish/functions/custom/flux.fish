@@ -1,4 +1,4 @@
-fl# Flux Reconcile Terraform
+# Flux Reconcile Terraform
 # usage: frt authentik will run flux reconcile source oci terraform-authentik-oci
 function frt --description "frt authentik will run flux reconcile source oci terraform-authentik-oci"
     set argument $argv[1]
