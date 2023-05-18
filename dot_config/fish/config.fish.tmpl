@@ -56,23 +56,3 @@ if test -n "$GITLAB_TOKEN" -a -n "$GITHUB_TOKEN"
 end
 
 alias gsi="git submodule update --init --recursive"
-
-function set_go_variables
-    set go_env_output (go env)
-    for line in $go_env_output
-        set -l key (echo $line | awk -F'=' '{print $1}' | tr -d '"')
-        set -l value (echo $line | awk -F'=' '{print $2}' | tr -d '"')
-        switch $key
-            case "GOPATH"
-                set -gx GOPATH $value
-            case "GOBIN"
-                set -gx GOBIN $value
-            # Add more cases for other variables if needed
-        end
-    end
-    fish_add_path $GOBIN
-end
-
-if status --is-interactive
-    set_go_variables
-end
