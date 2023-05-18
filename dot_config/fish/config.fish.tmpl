@@ -58,4 +58,4 @@ end
 alias gsi="git submodule update --init --recursive"
 
 set -x GOPATH $HOME/go
-set -x PATH $PATH $GOPATH/bin
+fish_add_path $GOPATH/bin
