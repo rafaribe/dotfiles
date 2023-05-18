@@ -56,3 +56,6 @@ if test -n "$GITLAB_TOKEN" -a -n "$GITHUB_TOKEN"
 end
 
 alias gsi="git submodule update --init --recursive"
+
+set -x GOPATH $HOME/go
+set -x PATH $PATH $GOPATH/bin
