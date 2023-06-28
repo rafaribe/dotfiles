@@ -4,7 +4,8 @@
 
 # document link: https://starship.rs/ja-JP/config/#%E3%83%95%E3%82%9A%E3%83%AD%E3%83%B3%E3%83%95%E3%82%9A%E3%83%88
 # format = "$all"
-format = """
+format = """$custom\
+$shell\
 $username\
 $hostname\
 $shlvl\
@@ -47,7 +48,6 @@ $gcloud\
 $env_var\
 $crystal\
 $cmd_duration\
-$custom\
 $line_break\
 $jobs\
 
@@ -123,7 +123,14 @@ style = "bold gray"
 disabled = false
 symbol = "🏃‍♂️ "
 threshold = 1
-
+[shell]
+fish_indicator = "🐟"
+bash_indicator = "🐧"
+zsh_indicator = "🐧"
+powershell_indicator = ""
+unknown_indicator = "mystery shell"
+format = "[$indicator ](bold cyan) "
+disabled = false
 [battery]
 disabled = false
 # full_symbol = "🔋"
@@ -140,7 +147,7 @@ format = "[$time]($style) "
 style = "bold green"
 use_12hr = false
 time_format = "%T"
-utc_time_offset = "+0"
+utc_time_offset = "+1"
 time_range="-"  # always: time_range="00:00:00-23:59:59"
 
 [line_break]
@@ -208,6 +215,7 @@ symbol = " "
 style = "bg:#06969A"
 format = '[ $symbol $context ]($style) $path'
 
+
 ### Programming Languages
 
 
@@ -270,3 +278,4 @@ echo -n $time_symbol
 """
 format = "[$output]($style)  "
 when = "true"
+
