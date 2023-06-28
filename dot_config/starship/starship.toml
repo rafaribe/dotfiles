@@ -56,7 +56,9 @@ $character\
 """
 
 right_format="""
+$custom\
 $kubernetes
+${custom.time_mood}\
 $time\
 $cmd_duration
 """
@@ -74,7 +76,7 @@ style_root = "red bold"
 # format = "user: [$user]($style) "
 
 [directory]
-truncation_length = 0
+truncation_length = 2
 truncate_to_repo = true
 
 ## Git settings
@@ -248,3 +250,23 @@ symbol = "AWS Region: "
 ap-southeast-2 = "au"
 us-east-1 = "va"
 
+
+## Custom time mood
+
+[custom.time_mood]
+disabled = false
+command = """
+set -l TIME (date +%H)
+if test $TIME -le 17 -a $TIME -ge 8
+    set time_symbol "🌤"
+else if test $TIME -le 21 -a $TIME -ge 18
+    set time_symbol "🌖"
+else if test $TIME -le 4 -o $TIME -ge 22
+    set time_symbol "🌙"
+else
+    set time_symbol "🌔"
+end
+echo -n $time_symbol
+"""
+format = "[$output]($style)  "
+when = "true"
