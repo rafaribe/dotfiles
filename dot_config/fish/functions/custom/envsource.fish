@@ -6,23 +6,7 @@ function envsource
     end
   end
 
-function set_go_variables
-    set go_env_output (go env)
-    for line in $go_env_output
-        set -l key (echo $line | awk -F'=' '{print $1}' | tr -d '"')
-        set -l value (echo $line | awk -F'=' '{print $2}' | tr -d '"')
-        switch $key
-            case "GOPATH"
-                set -gx GOPATH $value
-                set -gx GOBIN $value/bin
-            # Add more cases for other variables if needed
-        end
-    end
-
-    fish_add_path $GOBIN
-    fish_add_path $GOPATH
-end
-
-if status --is-interactive
-    set_go_variables
-end
+set -x GOPATH (go env GOPATH)
+set -x GOBIN (go env GOPATH)/bin
+fish_add_path $GOBIN
+fish_add_path $GOPATH
