@@ -10,3 +10,7 @@ set -x GOPATH (go env GOPATH)
 set -x GOBIN (go env GOPATH)/bin
 fish_add_path $GOBIN
 fish_add_path $GOPATH
+
+function sdk
+  source ~/.sdkman/bin/sdkman-init.sh ';' sdk $argv
+end
