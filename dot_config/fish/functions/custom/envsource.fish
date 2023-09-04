@@ -12,5 +12,5 @@ fish_add_path $GOBIN
 fish_add_path $GOPATH
 
 function sdk
-  source ~/.sdkman/bin/sdkman-init.sh ';' sdk $argv
+  bass source ~/.sdkman/bin/sdkman-init.sh ';' sdk $argv
 end
