@@ -14,3 +14,5 @@ fish_add_path $GOPATH
 function sdk
   bass source ~/.sdkman/bin/sdkman-init.sh ';' sdk $argv
 end
+
+fish_add_path /usr/local/share/dotnet/
