@@ -10,6 +10,8 @@ $username\
 $hostname\
 $shlvl\
 $directory\
+$file_number\
+$folder_number\
 ${custom.giturl}\
 $git_branch\
 $git_commit\
@@ -287,3 +289,19 @@ command = 'echo " on PROD"'
 symbol = '⚠️ '
 style = 'bold red'
 format = '[$symbol($output )]($style)'
+
+[custom.file_number]
+command = "find . -maxdepth 1 -type f -not -name '.DS_Store' | wc -l"
+when = "exit 0"                                                       # run always
+symbol = " "
+description = "Number of files in the current working directory"
+format = '[$symbol$output]($style) '
+style = "fg:yellow bg:black bold"                                     # terminus different
+
+[custom.folder_number]
+command = "find . -maxdepth 1 -type d -not -name '.git' -not -name '.' | wc -l"
+when = "exit 0"
+symbol = " "
+description = "Number of folders in the current working directory"
+format = '[$symbol$output]($style) '
+style = "fg:yellow bg:black bold"                                               # terminus different
