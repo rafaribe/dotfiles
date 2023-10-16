@@ -57,7 +57,7 @@ $character\
 right_format = """
 $custom\
 $kubernetes\
-${custom.k8s_prod_warning}
+${custom.k8s_prod_warning}\
 ${custom.time_mood}\
 $time\
 $cmd_duration
@@ -287,18 +287,23 @@ symbol = '⚠️ '
 style = 'bold red'
 format = '[$symbol($output )]($style)'
 
-[custom.file_number]
-command = "find . -maxdepth 1 -type f -not -name '.DS_Store' | wc -l"
-when = "exit 0"                                                       # run always
-symbol = " "
-description = "Number of files in the current working directory"
-format = '[$symbol$output]($style) '
-style = "fg:yellow bg:black bold"                                     # terminus different
+[custom.git_status]
+command = '''
+git_status=$(git status --porcelain)
+# Untracked or Deleted (unstaged) files - Red
+if echo ${git_status} | grep -qe '^?? ' -e '^[MARCDU ]D ' -e '^D[ UM]'; then
+    echo -n $'\e[31m●'
+fi
 
-[custom.folder_number]
-command = "find . -maxdepth 1 -type d -not -name '.git' -not -name '.' | wc -l"
-when = "exit 0"
-symbol = " "
-description = "Number of folders in the current working directory"
-format = '[$symbol$output]($style) '
-style = "fg:yellow bg:black bold"                                               # terminus different
+# Modified (unstaged) and Renamed files - Yellow
+if echo ${git_status} | grep -qe '^[ MARC]M ' -e '^R[ MD] '; then
+    echo -n $'\e[33m●'
+fi
+
+# Staged files (including Deleted) - Green
+if echo ${git_status} | grep -qe '^A[ MDAU] ' -e '^M[ MD] ' -e '^UA' -e '^D '; then
+    echo -n $'\e[32m●'
+fi
+'''
+when = 'git rev-parse --is-inside-work-tree >/dev/null 2>&1'
+format = '( $output)'
