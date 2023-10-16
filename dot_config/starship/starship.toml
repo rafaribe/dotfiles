@@ -10,8 +10,6 @@ $username\
 $hostname\
 $shlvl\
 $directory\
-$file_number\
-$folder_number\
 ${custom.giturl}\
 $git_branch\
 $git_commit\
@@ -52,7 +50,6 @@ $crystal\
 $cmd_duration\
 $line_break\
 $jobs\
-
 $status\
 $character\
 """
