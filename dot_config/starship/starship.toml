@@ -55,9 +55,10 @@ $status\
 $character\
 """
 
-right_format="""
+right_format = """
 $custom\
-$kubernetes
+$kubernetes\
+${custom.k8s_prod_warning}
 ${custom.time_mood}\
 $time\
 $cmd_duration
@@ -83,7 +84,7 @@ truncate_to_repo = true
 [git_branch]
 style = "bold purple"
 # symbol = "🌱 "
-truncation_length = 100  # no truncation
+truncation_length = 100   # no truncation
 truncation_symbol = "..."
 
 [git_status]
@@ -92,7 +93,7 @@ untracked = "U"
 deleted = "🗑 "
 renamed = "👅"
 conflicted = "🏳 "
-ahead = "⇡"  # unpushed commit
+ahead = "⇡"       # unpushed commit
 behind = "😰"
 diverged = "😵"
 
@@ -148,7 +149,7 @@ style = "bold green"
 use_12hr = false
 time_format = "%T"
 utc_time_offset = "+1"
-time_range="-"  # always: time_range="00:00:00-23:59:59"
+time_range = "-"            # always: time_range="00:00:00-23:59:59"
 
 [line_break]
 disabled = true # separate prompt into 2 lines
@@ -195,7 +196,7 @@ Windows = " "
 [character]
 # symbol = "🍺"
 disabled = false
-success_symbol = "[➜](bold green)" 
+success_symbol = "[➜](bold green)"
 error_symbol = "[✗](bold red) "
 
 
@@ -279,3 +280,10 @@ echo -n $time_symbol
 format = "[$output]($style)  "
 when = "true"
 
+[custom.k8s_prod_warning]
+description = 'Shows an indicator when the name of the current kubectl context contains the string `prod` anywhere.'
+when = 'kubectl config current-context | grep -q prod'
+command = 'echo " on PROD"'
+symbol = '⚠️ '
+style = 'bold red'
+format = '[$symbol($output )]($style)'
