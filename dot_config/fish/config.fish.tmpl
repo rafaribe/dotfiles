@@ -50,6 +50,8 @@ set -x WATSON_DIR ~/.config/watson
 for file in ~/.config/fish/functions/personal/*.fish
     source $file
 end
+/usr/bin/keychain --nogui $HOME/.ssh/id_ed25519
+source $HOME/.keychain/rafa-desktop-fish
 {{ end }}
 
 if test -n "$GITLAB_TOKEN" -a -n "$GITHUB_TOKEN"
@@ -58,3 +60,4 @@ end
 
 alias gsi="git submodule update --init --recursive"
 set -gx INFLUX_SKIP_VERIFY true
+set -gx LC_ALL "C.UTF-8" 
