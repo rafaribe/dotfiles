@@ -1,0 +1,10 @@
+mac_address: E1:81:AA:30:D9:0D
+scan_timeout: 1
+connection_timeout: 10
+movement_timeout: 30
+adapter_name: hci0
+server_address: "127.0.0.1"
+server_port: 9123
+favourites:
+  sit: 683
+  stand: 1040
