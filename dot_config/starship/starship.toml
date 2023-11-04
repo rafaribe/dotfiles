@@ -57,8 +57,6 @@ $character\
 right_format = """
 $custom\
 $kubernetes\
-${custom.k8s_prod_warning}\
-${custom.time_mood}\
 $time\
 $cmd_duration
 """
@@ -257,35 +255,6 @@ symbol = "AWS Region: "
 # ap-northeast-1 = "an1"
 ap-southeast-2 = "au"
 us-east-1 = "va"
-
-
-## Custom time mood
-
-[custom.time_mood]
-disabled = false
-command = """
-set -l TIME (date +%H)
-if test $TIME -le 17 -a $TIME -ge 8
-    set time_symbol "🌤"
-else if test $TIME -le 21 -a $TIME -ge 18
-    set time_symbol "🌖"
-else if test $TIME -le 4 -o $TIME -ge 22
-    set time_symbol "🌙"
-else
-    set time_symbol "🌔"
-end
-echo -n $time_symbol
-"""
-format = "[$output]($style)  "
-when = "true"
-
-[custom.k8s_prod_warning]
-description = 'Shows an indicator when the name of the current kubectl context contains the string `prod` anywhere.'
-when = 'kubectl config current-context | grep -q prod'
-command = 'echo " on PROD"'
-symbol = '⚠️ '
-style = 'bold red'
-format = '[$symbol($output )]($style)'
 
 [custom.git_status]
 command = '''
