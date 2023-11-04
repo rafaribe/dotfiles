@@ -50,8 +50,8 @@ set -x WATSON_DIR ~/.config/watson
 for file in ~/.config/fish/functions/personal/*.fish
     source $file
 end
-/usr/bin/keychain --nogui $HOME/.ssh/id_ed25519
-source $HOME/.keychain/rafa-desktop-fish
+/usr/bin/keychain --nogui $HOME/.ssh/id_ed25519 &>/dev/null &
+source $HOME/.keychain/rafa-desktop-fish &>/dev/null &
 {{ end }}
 
 if test -n "$GITLAB_TOKEN" -a -n "$GITHUB_TOKEN"
