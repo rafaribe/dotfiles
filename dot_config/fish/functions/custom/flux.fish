@@ -24,4 +24,4 @@ function frk
     flux resume hr $ks -n $namespace
 end
 
-alias fho "flux reconcile source git home-ops && flux reconcile ks cluster && flux reconcile ks cluster-apps"
+alias fho 'flux reconcile source git home-ops; flux reconcile ks cluster; flux reconcile ks cluster-apps'
