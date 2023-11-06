@@ -103,6 +103,3 @@ function pl
   function aksup
     az aks get-versions --location westeurope --output table
   end
-
-set -Ux LC_ALL en_US.UTF-8
-set -Ux LANG en_US.UTF-8
