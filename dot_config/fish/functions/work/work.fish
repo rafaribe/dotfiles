@@ -103,3 +103,12 @@ function pl
   function aksup
     az aks get-versions --location westeurope --output table
   end
+
+  set -gx AZURE_KEYVAULT_AUTH_VIA_CLI true
+
+
+
+
+
+
+
