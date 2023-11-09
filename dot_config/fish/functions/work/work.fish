@@ -109,6 +109,7 @@ function pl
 
 
 
-
-
-
+function pok 
+  set filename $argv[1]
+  pulumi stack output kubeconfig --show-secrets >> $HOME/.kube/$filename.yaml
+end
