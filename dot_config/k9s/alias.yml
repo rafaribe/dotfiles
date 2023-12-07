@@ -16,3 +16,5 @@ alias:
   cor: acme.cert-manager.io/orders
   csr: certmanager.io/certificaterequests
   slc: slack.stakater.io/channels
+  ars: actions.github.com/v1alpha1/autoscalingrunnersets
+  arl: actions.github.com/v1alpha1/autoscalinglisteners
