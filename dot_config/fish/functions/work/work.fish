@@ -3,7 +3,7 @@
 function totp
   set -x BW_ITEM_ID c270feae-2089-4e71-8779-ae57013c9920
   set -x PASS (bw get password $BW_ITEM_ID)
-  set -x OTP (bw get totp webmail.de.pepperl-fuchs.com)
+  set -x OTP (bw get totp $BW_ITEM_ID)
   echo -n "$PASS$OTP" | tr -d "\n" | pbcopy
   echo "TOTP code copied to clipboard"
 end
