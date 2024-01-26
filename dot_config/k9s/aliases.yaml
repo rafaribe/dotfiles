@@ -1,5 +1,5 @@
 # $XDG_CONFIG_HOME/k9s/alias.yml
-alias:
+aliases:
   sec: v1/secrets
   sm: monitoring.coreos.com/v1/servicemonitors
   ss: apps/v1/statefulsets
@@ -18,3 +18,10 @@ alias:
   slc: slack.stakater.io/channels
   ars: actions.github.com/v1alpha1/autoscalingrunnersets
   arl: actions.github.com/v1alpha1/autoscalinglisteners
+  dp: deployments
+  jo: jobs
+  cr: clusterroles
+  crb: clusterrolebindings
+  ro: roles
+  rb: rolebindings
+  np: networkpolicies
