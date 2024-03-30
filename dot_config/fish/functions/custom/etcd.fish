@@ -1,0 +1,1 @@
+set -gx "ETCDCTL_API" "3"
