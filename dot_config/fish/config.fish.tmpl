@@ -44,6 +44,7 @@ for file in ~/.config/fish/functions/work/*.fish
 end
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 set -x WATSON_DIR ~/.config/watson
+fish_add_path $HOME/bin
 {{ end }}
 
 {{ if eq .chezmoi.os "linux" }}
@@ -63,4 +64,4 @@ alias gsi="git submodule update --init --recursive"
 set -gx INFLUX_SKIP_VERIFY true
 set -gx LC_ALL "C.UTF-8"
 
-atuin init fish | source
+atuin init fish | source
