@@ -8,18 +8,6 @@ function totp
   echo "TOTP code copied to clipboard"
 end
 ## Pulumi Logins
-function plpersonal
-  echo "Logging In as Neoception Personal"
-  set -x PULUMI_ACCESS_TOKEN (bw get password pulumi_personal_token)
-  pulumi logout; pulumi login
-end
-
-function plproducts
-  echo "Logging In as Neoception Products"
-  set -x PULUMI_ACCESS_TOKEN (bw get password pulumi_products_token)
-  pulumi logout; pulumi login
-end
-
 function plrafaribe
   echo "Logging In as rafaribe"
   set -x PULUMI_ACCESS_TOKEN (bw get password pulumi_rafaribe_token)
@@ -114,4 +102,8 @@ end
 function plazure
   echo Logging In into Azure Blob Storage
   sops -i -d login.sh; and ./login.sh; and sops -i -e login.sh
+end
+
+function fwip
+  curl ifconfig.me | awk '{print $1"/32"}' | pbcopy
 end
