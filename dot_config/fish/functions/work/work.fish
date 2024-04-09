@@ -107,3 +107,7 @@ end
 function fwip
   curl ifconfig.me | awk '{print $1"/32"}' | pbcopy
 end
+
+set -x GIT_SSH_COMMAND (if test (pwd) = "$HOME/code/work/*" 
+    echo "-i ~/.ssh/id_ed25519-work -o IdentitiesOnly=yes"
+end)
