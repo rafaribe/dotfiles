@@ -34,3 +34,8 @@ function glt
         echo "Not inside a Git repository."
     end
 end
+
+function ec
+    git commit -m "chore: empty commit" --allow-empty
+    git push
+end
