@@ -1,2 +1,1 @@
 # Bat
-alias bat="batcat"
