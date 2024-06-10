@@ -54,6 +54,7 @@ fish_add_path $HOME/.local/bin
 {{ end }}
 
 {{ if eq .chezmoi.os "linux" }}
+alias cat="bat --style=plain"
 
 for file in ~/.config/fish/functions/personal/*.fish
     source $file
