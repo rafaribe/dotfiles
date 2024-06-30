@@ -1,6 +1,11 @@
 k9s:
   liveViewAutoRefresh: false
+  {{ if eq .chezmoi.os "linux" }}
+  screenDumpDir: /home/rafaribe/.local/k9s/screendumps
+  {{ end }}
+  {{ if eq .chezmoi.os "darwin" }}
   screenDumpDir: /Users/rafaribe/Library/Application Support/k9s/screen-dumps
+  {{ end }}
   refreshRate: 2
   maxConnRetry: 5
   readOnly: false
