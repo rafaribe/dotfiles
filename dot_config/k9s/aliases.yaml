@@ -25,3 +25,6 @@ aliases:
   ro: roles
   rb: rolebindings
   np: networkpolicies
+  vmsc: operator.victoriametrics.com/v1beta1/vmstaticscrapes
+  vmss: operator.victoriametrics.com/v1beta1/vmservicescrapes
+  vmps: operator.victoriametrics.com/v1beta1/vmpodscrapes
