@@ -54,7 +54,7 @@ $status\
 $character\
 """
 
-right_format="""
+right_format = """
 $kubernetes
 $time\
 $cmd_duration
@@ -73,14 +73,14 @@ style_root = "red bold"
 # format = "user: [$user]($style) "
 
 [directory]
-truncation_length = 0
+truncation_length = 1
 truncate_to_repo = false
 
 ## Git settings
 [git_branch]
 style = "bold purple"
 # symbol = "🌱 "
-truncation_length = 100  # no truncation
+truncation_length = 100   # no truncation
 truncation_symbol = "..."
 
 [git_status]
@@ -89,7 +89,7 @@ untracked = "U"
 deleted = "🗑 "
 renamed = "👅"
 conflicted = "🏳 "
-ahead = "⇡"  # unpushed commit
+ahead = "⇡"       # unpushed commit
 behind = "😰"
 diverged = "😵"
 
@@ -132,7 +132,7 @@ style = "bold green"
 use_12hr = false
 time_format = "%T"
 utc_time_offset = "+0"
-time_range="-"  # always: time_range="00:00:00-23:59:59"
+time_range = "-"            # always: time_range="00:00:00-23:59:59"
 
 [line_break]
 disabled = true # separate prompt into 2 lines
@@ -179,7 +179,7 @@ Windows = " "
 [character]
 # symbol = "🍺"
 disabled = false
-success_symbol = "[➜](bold green)" 
+success_symbol = "[➜](bold green)"
 error_symbol = "[✗](bold red) "
 
 
@@ -240,4 +240,3 @@ symbol = "AWS Region: "
 # ap-northeast-1 = "an1"
 ap-southeast-2 = "au"
 us-east-1 = "va"
-
