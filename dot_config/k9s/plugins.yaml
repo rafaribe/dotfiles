@@ -217,3 +217,26 @@ plugins:
     args:
       - -c
       - "kubectl debug -it --context $CONTEXT -n=$NAMESPACE $POD --target=$NAME --image=ghcr.io/nicolaka/netshoot:v0.13 --share-processes -- bash"
+  remove_finalizers:
+    shortCut: Ctrl-F
+    confirm: true
+    dangerous: true
+    scopes:
+      - all
+    description: |
+      Removes all finalizers from selected resource. Be careful when using it,
+      it may leave dangling resources or delete them
+    command: kubectl
+    background: true
+    args:
+      - patch
+      - --context
+      - $CONTEXT
+      - --namespace
+      - $NAMESPACE
+      - $RESOURCE_NAME.$RESOURCE_GROUP
+      - $NAME
+      - -p
+      - '{"metadata":{"finalizers":null}}'
+      - --type
+      - merge
