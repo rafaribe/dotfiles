@@ -218,7 +218,7 @@ plugins:
       - -c
       - "kubectl debug -it --context $CONTEXT -n=$NAMESPACE $POD --target=$NAME --image=ghcr.io/nicolaka/netshoot:v0.13 --share-processes -- bash"
   remove_finalizers:
-    shortCut: Ctrl-F
+    shortCut: Ctrl-I
     confirm: true
     dangerous: true
     scopes:
