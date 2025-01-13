@@ -1,6 +1,9 @@
----
+# $HOME/.k9s/plugin.yml
+# move selected line to chosen resource in K9s, then:
+# Shift-T (with confirmation) to toggle helm releases or kustomizations suspend and resume
+# Shift-R (no confirmation) to reconcile a git source or a helm release or a kustomization
 plugins:
-  # Flux Plugins
+  # Flux
   toggle-helmrelease:
     shortCut: Shift-T
     confirm: true
@@ -150,7 +153,7 @@ plugins:
         -n $NAMESPACE $NAME
         | less -K
   trace:
-    shortCut: Shift-0
+    shortCut: Shift-P
     confirm: false
     description: Flux trace
     scopes:
@@ -160,7 +163,7 @@ plugins:
     args:
       - -c
       - >-
-        resource=$(echo $RESOURCE_NAME | sed -E 's/ies$/y/' | sed -E 's/ses$/se/' | sed -E 's/(s|es)$//g')
+        resource=$(echo $RESOURCE_NAME | sed -E 's/ies$/y/' | sed -E 's/ses$/se/' | sed -E 's/(s|es)$//g');
         flux
         trace
         --context $CONTEXT
@@ -203,22 +206,118 @@ plugins:
         kustomizations.kustomize.toolkit.fluxcd.io -o json
         | jq -r '.items[] | select(.spec.suspend==true) | [.metadata.name,.spec.suspend] | @tsv'
         | less -K
-  # Create debug container for selected pod in current namespace
-  # See https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container
-  debug:
-    shortCut: Shift-D
-    description: Add debug container
-    dangerous: true
+  # Cert Manager
+  cert-status:
+    shortCut: Shift-S
+    confirm: false
+    description: Certificate status
     scopes:
-      - containers
+      - certificates
     command: bash
     background: false
-    confirm: true
     args:
       - -c
-      - "kubectl debug -it --context $CONTEXT -n=$NAMESPACE $POD --target=$NAME --image=ghcr.io/nicolaka/netshoot:v0.13 --share-processes -- bash"
+      - "cmctl status certificate --context $CONTEXT -n $NAMESPACE $NAME |& less"
+  cert-renew:
+    shortCut: Shift-R
+    confirm: false
+    description: Certificate renew
+    scopes:
+      - certificates
+    command: bash
+    background: false
+    args:
+      - -c
+      - "cmctl renew --context $CONTEXT -n $NAMESPACE $NAME |& less"
+  secret-inspect:
+    shortCut: Shift-I
+    confirm: false
+    description: Inspect secret
+    scopes:
+      - secrets
+    command: bash
+    background: false
+    args:
+      - -c
+      - "cmctl inspect secret --context $CONTEXT -n $NAMESPACE $NAME |& less"
+  # Helm Values
+  helm-values:
+    shortCut: v
+    confirm: false
+    description: Values
+    scopes:
+      - helm
+    command: sh
+    background: false
+    args:
+      - -c
+      - "helm get values $COL-NAME -n $NAMESPACE --kube-context $CONTEXT | less -K"
+  helm-diff-previous:
+    shortCut: Shift-D
+    confirm: false
+    description: Diff with Previous Revision
+    scopes:
+      - helm
+    command: bash
+    background: false
+    args:
+      - -c
+      - >-
+        LAST_REVISION=$(($COL-REVISION-1));
+        helm diff revision $COL-NAME $COL-REVISION $LAST_REVISION --kube-context $CONTEXT --namespace $NAMESPACE --color | less -RK
+  helm-diff-current:
+    shortCut: Shift-Q
+    confirm: false
+    description: Diff with Current Revision
+    scopes:
+      - history
+    command: bash
+    background: false
+    args:
+      - -c
+      - >-
+        RELEASE_NAME=$(echo $NAME | cut -d':' -f1);
+        LATEST_REVISION=$(helm history -n $NAMESPACE --kube-context $CONTEXT $RELEASE_NAME | grep deployed | cut -d$'\t' -f1 | tr -d ' \t');
+        helm diff revision $RELEASE_NAME $LATEST_REVISION $COL-REVISION --kube-context $CONTEXT --namespace $NAMESPACE --color | less -RK
+  helm-purge:
+    shortCut: Ctrl-P
+    description: Helm Purge
+    dangerous: true
+    scopes:
+      - po
+    command: kubectl
+    background: true
+    args:
+      - purge
+      - $NAMESPACE
+      - $NAME
+  helm-default-values:
+    shortCut: Shift-V
+    confirm: false
+    description: Chart Default Values
+    scopes:
+      - helm
+    command: sh
+    background: false
+    args:
+      - -c
+      - >-
+        revision=$(helm history -n $NAMESPACE --kube-context $CONTEXT $COL-NAME | grep deployed | cut -d$'\t' -f1 | tr -d ' \t');
+        kubectl
+        get secrets
+        --context $CONTEXT
+        -n $NAMESPACE
+        sh.helm.release.v1.$COL-NAME.v$revision -o yaml
+        | yq e '.data.release' -
+        | base64 -d
+        | base64 -d
+        | gunzip
+        | jq -r '.chart.values'
+        | yq -P
+        | less -K
+  # Finalizers
   remove_finalizers:
-    shortCut: Ctrl-I
+    shortCut: Ctrl-F
     confirm: true
     dangerous: true
     scopes:
