@@ -28,3 +28,4 @@ aliases:
   vmsc: operator.victoriametrics.com/v1beta1/vmstaticscrapes
   vmss: operator.victoriametrics.com/v1beta1/vmservicescrapes
   vmps: operator.victoriametrics.com/v1beta1/vmpodscrapes
+  r: gateway.networking.k8s.io/v1/httproutes

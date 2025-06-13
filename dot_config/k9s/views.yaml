@@ -1,0 +1,14 @@
+# $XDG_CONFIG_HOME/k9s/views.yaml
+views:
+  # Alters the pod view column layout. Uses GVR as key
+  gateway.networking.k8s.io/v1/httproutes:
+    # Overrides default sort column
+    sortColumn: GATEWAY:asc
+    columns:
+      - NAME
+      - HOSTNAMES:.spec.hostnames
+      - GATEWAY:.spec.parentRefs[*].name
+      - SERVICE:.spec.rules[*].backendRefs[*].name
+      - PORT:.spec.rules[*].backendRefs[*].port
+      - NAMESPACE|WR # => 🌚 Specifies the NAMESPACE column to be right aligned and only visible while in wide mode
+      - AGE
