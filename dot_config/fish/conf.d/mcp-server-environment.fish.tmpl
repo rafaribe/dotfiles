@@ -1,0 +1,85 @@
+# =============================================================================
+# MCP Server Environment Variables
+# =============================================================================
+# Environment variables for Model Context Protocol (MCP) servers
+# Used by Amazon Q CLI, VS Code, and other MCP-compatible tools
+# Managed by chezmoi with Bitwarden integration
+
+# Alertmanager MCP Server
+# ----------------------
+set -gx ALERTMANAGER_URL "https://alertmanager.rafaribe.com"
+
+# OPNsense MCP Server
+# ------------------
+{{- if (bitwarden "item" "OPNsense") }}
+{{- $opnsense := (bitwarden "item" "OPNsense") }}
+set -gx OPNSENSE_URL "{{ $opnsense.login.uris.0.uri | default "https://10.0.0.1" }}"
+set -gx OPNSENSE_API_KEY "{{ (bitwarden "fields" "OPNsense").api_key.value }}"
+set -gx OPNSENSE_API_SECRET "{{ (bitwarden "fields" "OPNsense").api_secret.value }}"
+{{- else }}
+# OPNsense credentials not found in Bitwarden - using placeholders
+set -gx OPNSENSE_URL "http://10.0.0.1"
+set -gx OPNSENSE_API_KEY "your-api-key-here"
+set -gx OPNSENSE_API_SECRET "your-api-secret-here"
+{{- end }}
+set -gx OPNSENSE_VERIFY_SSL "false"  # Set to "true" if using valid SSL cert
+set -gx INCLUDE_PLUGINS "true"  # Include OPNsense plugins in API responses
+
+# FluxCD MCP Server
+# ----------------
+set -gx KUBECONFIG "$HOME/.kube/config"
+
+# GitHub MCP Server
+# ----------------
+{{- if (bitwarden "fields" "github") }}
+set -gx GITHUB_PERSONAL_ACCESS_TOKEN "{{ (bitwarden "fields" "github").GITHUB_TOKEN.value }}"
+{{- else }}
+# GitHub token not found in Bitwarden - commenting out
+# set -gx GITHUB_PERSONAL_ACCESS_TOKEN "your-github-token-here"
+{{- end }}
+
+# PostgreSQL MCP Server
+# ---------------------
+{{- if (bitwarden "item" "PostgreSQL MCP") }}
+{{- $postgres := (bitwarden "item" "PostgreSQL MCP") }}
+set -gx POSTGRES_CONNECTION_STRING "postgresql://{{ $postgres.login.username }}:{{ $postgres.login.password }}@{{ (bitwarden "fields" "PostgreSQL MCP").host.value | default "localhost" }}:{{ (bitwarden "fields" "PostgreSQL MCP").port.value | default "5432" }}/{{ (bitwarden "fields" "PostgreSQL MCP").database.value }}"
+{{- else }}
+# PostgreSQL credentials not found in Bitwarden - using individual parameters if available
+{{- if (bitwarden "fields" "PostgreSQL") }}
+{{- $pgFields := (bitwarden "fields" "PostgreSQL") }}
+set -gx POSTGRES_HOST "{{ $pgFields.host.value | default "localhost" }}"
+set -gx POSTGRES_PORT "{{ $pgFields.port.value | default "5432" }}"
+set -gx POSTGRES_USER "{{ $pgFields.username.value }}"
+set -gx POSTGRES_PASSWORD "{{ $pgFields.password.value }}"
+set -gx POSTGRES_DATABASE "{{ $pgFields.database.value }}"
+{{- else }}
+# PostgreSQL not configured - commenting out
+# set -gx POSTGRES_CONNECTION_STRING "postgresql://username:password@localhost:5432/database"
+{{- end }}
+{{- end }}
+
+# =============================================================================
+# Bitwarden Item Structure Expected:
+# =============================================================================
+# 
+# OPNsense:
+#   - Type: Login
+#   - URI: https://your-opnsense-url
+#   - Custom Fields:
+#     - api_key (text)
+#     - api_secret (text)
+#
+# github:
+#   - Type: Login or Secure Note
+#   - Custom Fields:
+#     - GITHUB_TOKEN (secret)
+#
+# PostgreSQL MCP (optional):
+#   - Type: Login
+#   - Username: db_username
+#   - Password: db_password
+#   - Custom Fields:
+#     - host (text)
+#     - port (text)
+#     - database (text)
+# =============================================================================
