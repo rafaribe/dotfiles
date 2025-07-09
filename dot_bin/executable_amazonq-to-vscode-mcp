@@ -1,0 +1,130 @@
+#!/bin/bash
+
+# =============================================================================
+# Amazon Q to VS Code MCP Configuration Converter
+# =============================================================================
+# This script converts Amazon Q MCP server configuration to VS Code format
+# Managed by chezmoi
+
+show_help() {
+    echo "Amazon Q to VS Code MCP Configuration Converter"
+    echo ""
+    echo "Usage: $0 [input_file] [output_file]"
+    echo ""
+    echo "Arguments:"
+    echo "  input_file   Path to Amazon Q mcp.json (default: ~/.aws/amazonq/mcp.json)"
+    echo "  output_file  Path to VS Code settings.json (default: ~/.vscode/settings.json)"
+    echo ""
+    echo "Examples:"
+    echo "  $0"
+    echo "  $0 custom-mcp.json vscode-settings.json"
+    echo "  $0 --help"
+}
+
+# Check for help flag
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    show_help
+    exit 0
+fi
+
+# Set default paths
+INPUT_FILE="${1:-$HOME/.aws/amazonq/mcp.json}"
+OUTPUT_FILE="${2:-$HOME/.vscode/settings.json}"
+
+# Check if input file exists
+if [[ ! -f "$INPUT_FILE" ]]; then
+    echo "Error: Input file '$INPUT_FILE' not found"
+    exit 1
+fi
+
+# Check if jq is available
+if ! command -v jq >/dev/null 2>&1; then
+    echo "Error: jq is required but not installed"
+    echo "Install with: brew install jq"
+    exit 1
+fi
+
+echo "Converting MCP configuration..."
+echo "Input:  $INPUT_FILE"
+echo "Output: $OUTPUT_FILE"
+
+# Create backup of existing VS Code settings if it exists
+if [[ -f "$OUTPUT_FILE" ]]; then
+    BACKUP_FILE="$OUTPUT_FILE.backup.$(date +%Y%m%d_%H%M%S)"
+    echo "Backing up existing settings to: $BACKUP_FILE"
+    cp "$OUTPUT_FILE" "$BACKUP_FILE"
+fi
+
+# Create VS Code directory if it doesn't exist
+mkdir -p "$(dirname "$OUTPUT_FILE")"
+
+# Read existing VS Code settings or create empty object
+EXISTING_SETTINGS="{}"
+if [[ -f "$OUTPUT_FILE" ]]; then
+    EXISTING_SETTINGS=$(cat "$OUTPUT_FILE")
+fi
+
+# Convert Amazon Q MCP config to VS Code format
+VSCODE_MCP_CONFIG=$(jq -r '
+def convert_server(name; config):
+  {
+    command: (
+      if config.command == "npx" then
+        "npx"
+      elif config.command == "uv" then
+        "uv"  
+      elif config.command == "flux-operator-mcp" then
+        "flux-operator-mcp"
+      else
+        config.command
+      end
+    ),
+    args: config.args,
+    env: (
+      if config.env and (config.env | length > 0) then
+        config.env
+      else
+        null
+      end
+    )
+  } | 
+  with_entries(select(.value != null));
+
+.mcpServers | 
+to_entries | 
+map(select(.value.disabled != true)) |
+map({
+  key: .key,
+  value: convert_server(.key; .value)
+}) |
+from_entries
+' "$INPUT_FILE")
+
+# Merge with existing VS Code settings
+FINAL_CONFIG=$(echo "$EXISTING_SETTINGS" | jq --argjson mcp "$VSCODE_MCP_CONFIG" '
+. + {
+  "mcp.servers": $mcp
+}
+')
+
+# Write the final configuration
+echo "$FINAL_CONFIG" | jq . > "$OUTPUT_FILE"
+
+echo ""
+echo "✅ Conversion completed successfully!"
+echo ""
+echo "Converted servers:"
+echo "$VSCODE_MCP_CONFIG" | jq -r 'keys[]' | while read -r server; do
+    echo "  • $server"
+done
+
+echo ""
+echo "Note: Only enabled servers were converted."
+echo "Disabled servers (like opnsense) were skipped."
+echo ""
+echo "To use in VS Code:"
+echo "1. Install the MCP extension in VS Code"
+echo "2. Restart VS Code"
+echo "3. The MCP servers should be available"
+echo ""
+echo "VS Code settings updated at: $OUTPUT_FILE"
