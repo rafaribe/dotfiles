@@ -18,12 +18,14 @@ set -gx ALERTMANAGER_URL "https://alertmanager.rafaribe.com"
 {{- $opnsenseUrl = (index $opnsense.login.uris 0).uri }}
 {{- end }}
 set -gx OPNSENSE_URL "{{ $opnsenseUrl }}"
+{{- if hasKey $opnsense "fields" }}
 {{- range $opnsense.fields }}
 {{- if eq .name "api_key" }}
 set -gx OPNSENSE_API_KEY "{{ .value }}"
 {{- end }}
 {{- if eq .name "api_secret" }}
 set -gx OPNSENSE_API_SECRET "{{ .value }}"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- else }}
@@ -41,11 +43,13 @@ set -gx KUBECONFIG "$HOME/.kube/config"
 
 # GitHub MCP Server
 # ----------------
-{{- if (bitwarden "item" "github") }}
-{{- $github := (bitwarden "item" "github") }}
+{{- if (bitwarden "item" "109b214e-de5b-4366-a30a-ae57013c9920") }}
+{{- $github := (bitwarden "item" "109b214e-de5b-4366-a30a-ae57013c9920") }}
+{{- if hasKey $github "fields" }}
 {{- range $github.fields }}
 {{- if eq .name "GITHUB_TOKEN" }}
 set -gx GITHUB_PERSONAL_ACCESS_TOKEN "{{ .value }}"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- else }}
@@ -60,10 +64,12 @@ set -gx GITHUB_PERSONAL_ACCESS_TOKEN "{{ .value }}"
 {{- $host := "localhost" }}
 {{- $port := "5432" }}
 {{- $database := "" }}
+{{- if hasKey $postgres "fields" }}
 {{- range $postgres.fields }}
 {{- if eq .name "host" }}{{- $host = .value }}{{- end }}
 {{- if eq .name "port" }}{{- $port = .value }}{{- end }}
 {{- if eq .name "database" }}{{- $database = .value }}{{- end }}
+{{- end }}
 {{- end }}
 set -gx POSTGRES_CONNECTION_STRING "postgresql://{{ $postgres.login.username }}:{{ $postgres.login.password }}@{{ $host }}:{{ $port }}/{{ $database }}"
 {{- else }}
@@ -75,12 +81,14 @@ set -gx POSTGRES_CONNECTION_STRING "postgresql://{{ $postgres.login.username }}:
 {{- $database := "" }}
 {{- $username := "" }}
 {{- $password := "" }}
+{{- if $pg.fields }}
 {{- range $pg.fields }}
 {{- if eq .name "host" }}{{- $host = .value }}{{- end }}
 {{- if eq .name "port" }}{{- $port = .value }}{{- end }}
 {{- if eq .name "database" }}{{- $database = .value }}{{- end }}
 {{- if eq .name "username" }}{{- $username = .value }}{{- end }}
 {{- if eq .name "password" }}{{- $password = .value }}{{- end }}
+{{- end }}
 {{- end }}
 set -gx POSTGRES_HOST "{{ $host }}"
 set -gx POSTGRES_PORT "{{ $port }}"
