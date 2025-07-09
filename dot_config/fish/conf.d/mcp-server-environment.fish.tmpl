@@ -13,9 +13,19 @@ set -gx ALERTMANAGER_URL "https://alertmanager.rafaribe.com"
 # ------------------
 {{- if (bitwarden "item" "OPNsense") }}
 {{- $opnsense := (bitwarden "item" "OPNsense") }}
-set -gx OPNSENSE_URL "{{ $opnsense.login.uris.0.uri | default "https://10.0.0.1" }}"
-set -gx OPNSENSE_API_KEY "{{ (bitwarden "fields" "OPNsense").api_key.value }}"
-set -gx OPNSENSE_API_SECRET "{{ (bitwarden "fields" "OPNsense").api_secret.value }}"
+{{- $opnsenseUrl := "https://10.0.0.1" }}
+{{- if $opnsense.login.uris }}
+{{- $opnsenseUrl = (index $opnsense.login.uris 0).uri }}
+{{- end }}
+set -gx OPNSENSE_URL "{{ $opnsenseUrl }}"
+{{- range $opnsense.fields }}
+{{- if eq .name "api_key" }}
+set -gx OPNSENSE_API_KEY "{{ .value }}"
+{{- end }}
+{{- if eq .name "api_secret" }}
+set -gx OPNSENSE_API_SECRET "{{ .value }}"
+{{- end }}
+{{- end }}
 {{- else }}
 # OPNsense credentials not found in Bitwarden - using placeholders
 set -gx OPNSENSE_URL "http://10.0.0.1"
@@ -31,8 +41,13 @@ set -gx KUBECONFIG "$HOME/.kube/config"
 
 # GitHub MCP Server
 # ----------------
-{{- if (bitwarden "fields" "github") }}
-set -gx GITHUB_PERSONAL_ACCESS_TOKEN "{{ (bitwarden "fields" "github").GITHUB_TOKEN.value }}"
+{{- if (bitwarden "item" "github") }}
+{{- $github := (bitwarden "item" "github") }}
+{{- range $github.fields }}
+{{- if eq .name "GITHUB_TOKEN" }}
+set -gx GITHUB_PERSONAL_ACCESS_TOKEN "{{ .value }}"
+{{- end }}
+{{- end }}
 {{- else }}
 # GitHub token not found in Bitwarden - commenting out
 # set -gx GITHUB_PERSONAL_ACCESS_TOKEN "your-github-token-here"
@@ -42,16 +57,36 @@ set -gx GITHUB_PERSONAL_ACCESS_TOKEN "{{ (bitwarden "fields" "github").GITHUB_TO
 # ---------------------
 {{- if (bitwarden "item" "PostgreSQL MCP") }}
 {{- $postgres := (bitwarden "item" "PostgreSQL MCP") }}
-set -gx POSTGRES_CONNECTION_STRING "postgresql://{{ $postgres.login.username }}:{{ $postgres.login.password }}@{{ (bitwarden "fields" "PostgreSQL MCP").host.value | default "localhost" }}:{{ (bitwarden "fields" "PostgreSQL MCP").port.value | default "5432" }}/{{ (bitwarden "fields" "PostgreSQL MCP").database.value }}"
+{{- $host := "localhost" }}
+{{- $port := "5432" }}
+{{- $database := "" }}
+{{- range $postgres.fields }}
+{{- if eq .name "host" }}{{- $host = .value }}{{- end }}
+{{- if eq .name "port" }}{{- $port = .value }}{{- end }}
+{{- if eq .name "database" }}{{- $database = .value }}{{- end }}
+{{- end }}
+set -gx POSTGRES_CONNECTION_STRING "postgresql://{{ $postgres.login.username }}:{{ $postgres.login.password }}@{{ $host }}:{{ $port }}/{{ $database }}"
 {{- else }}
 # PostgreSQL credentials not found in Bitwarden - using individual parameters if available
-{{- if (bitwarden "fields" "PostgreSQL") }}
-{{- $pgFields := (bitwarden "fields" "PostgreSQL") }}
-set -gx POSTGRES_HOST "{{ $pgFields.host.value | default "localhost" }}"
-set -gx POSTGRES_PORT "{{ $pgFields.port.value | default "5432" }}"
-set -gx POSTGRES_USER "{{ $pgFields.username.value }}"
-set -gx POSTGRES_PASSWORD "{{ $pgFields.password.value }}"
-set -gx POSTGRES_DATABASE "{{ $pgFields.database.value }}"
+{{- if (bitwarden "item" "PostgreSQL") }}
+{{- $pg := (bitwarden "item" "PostgreSQL") }}
+{{- $host := "localhost" }}
+{{- $port := "5432" }}
+{{- $database := "" }}
+{{- $username := "" }}
+{{- $password := "" }}
+{{- range $pg.fields }}
+{{- if eq .name "host" }}{{- $host = .value }}{{- end }}
+{{- if eq .name "port" }}{{- $port = .value }}{{- end }}
+{{- if eq .name "database" }}{{- $database = .value }}{{- end }}
+{{- if eq .name "username" }}{{- $username = .value }}{{- end }}
+{{- if eq .name "password" }}{{- $password = .value }}{{- end }}
+{{- end }}
+set -gx POSTGRES_HOST "{{ $host }}"
+set -gx POSTGRES_PORT "{{ $port }}"
+set -gx POSTGRES_USER "{{ $username }}"
+set -gx POSTGRES_PASSWORD "{{ $password }}"
+set -gx POSTGRES_DATABASE "{{ $database }}"
 {{- else }}
 # PostgreSQL not configured - commenting out
 # set -gx POSTGRES_CONNECTION_STRING "postgresql://username:password@localhost:5432/database"
