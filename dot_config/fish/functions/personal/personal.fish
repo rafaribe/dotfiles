@@ -1,2 +1,2 @@
 # Bat
-alias ki kiro-cli'
+alias ki 'kiro-cli'
