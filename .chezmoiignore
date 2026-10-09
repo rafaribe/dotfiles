@@ -1,0 +1,7 @@
+# Encrypted targets need the age identity. Machines without it skip them
+# instead of failing every chezmoi command.
+{{ if not (stat (joinPath .chezmoi.homeDir ".config" "chezmoi" "key.txt")) }}
+.config/fish/conf.d/mcp-server-environment.fish
+{{ end }}
+
+README.md

@@ -1,0 +1,29 @@
+{{/* Git identity. useConfigOnly is set, so git refuses to guess these —
+     they have to be right per machine rather than inherited. Another dotfiles
+     source can override them through ~/.config/git/config.extra. */}}
+{{- $email := promptStringOnce . "gitEmail" "Git email" "rafael.ntw@gmail.com" -}}
+{{- $signingKey := promptStringOnce . "gitSigningKey" "GPG signing key ID (blank to disable signing)" "" -}}
+{{- $atuinSync := promptStringOnce . "atuinSyncAddress" "Atuin sync server (blank for the Atuin default)" "sh.rafaribe.com" -}}
+
+encryption = "age"
+
+[data]
+    gitEmail = {{ $email | quote }}
+    gitSigningKey = {{ $signingKey | quote }}
+    atuinSyncAddress = {{ $atuinSync | quote }}
+
+{{/* Secrets are age-encrypted in the repo. Machines without this identity
+     file skip the encrypted targets (see .chezmoiignore). */}}
+[age]
+    identity = {{ joinPath .chezmoi.homeDir ".config" "chezmoi" "key.txt" | quote }}
+    recipient = "age13c3lp878r5pt8lagcmewv6djmqac576gussyhwgv2h3a0nw9k5dq4p8erj"
+
+{{/* Point git at the leak guard hooks and pin this repo's commit identity,
+     so a global identity from elsewhere never ends up in this history. */}}
+[hooks.read-source-state.pre]
+    command = "python3"
+    args = [
+        {{ joinPath .chezmoi.sourceDir ".leak-guard" "install-hooks" | quote }},
+        "--email", {{ $email | quote }},
+        "--signing-key", {{ $signingKey | quote }},
+    ]

@@ -1,0 +1,35 @@
+# Global ignores — things that should never be committed to any repo.
+# Referenced by core.excludesfile.
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editors
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Direnv / local env
+.envrc.local
+.env.local
+
+# Terraform local state and provider caches
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl.local
+
+# Python / Node local cruft
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+
+# Claude Code local settings (per-machine, not shared)
+.claude/settings.local.json

@@ -1,0 +1,11 @@
+# <type>(<scope>): <subject>          ← 50 chars, imperative ("add", not "added")
+#
+# Types: feat fix docs style refactor perf test build ci chore revert
+#
+# Why is this change needed?
+#
+#
+# How does it address it?
+#
+#
+# Work towards: #<issue>

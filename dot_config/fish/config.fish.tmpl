@@ -1,13 +1,9 @@
 # Generated for envman. Do not edit.
 test -s "$HOME/.config/envman/load.fish"; and source "$HOME/.config/envman/load.fish"
 
-{{ if eq .chezmoi.os "linux" }}
+{{ if eq .chezmoi.os "linux" -}}
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 {{ end }}
-# Source Private BW file
-# A file without any values can be seen at ~/.config/fish/functions/no_load/bw.fish
-source ~/.config/fish/functions/bw/bw.fish
-
 # Source Aliases Folder
 for file in ~/.config/fish/alias/*.fish
     source $file
@@ -19,52 +15,35 @@ end
 
 starship init fish | source
 set -x STARSHIP_CONFIG ~/.config/starship/starship.toml
-set -x TALOSCONFIG ~/code/rafaribe/home-ops/talos/clusterconfig/talosconfig
-# Completions
 
+# Completions
 flux completion fish | source
 #kubectl completion fish | source
 
 set -x EDITOR "code --wait"
 set -x SOPS_AGE_KEY_FILE ~/.config/sops/age/keys.txt
 
-{{ if eq .chezmoi.os "darwin" }}
-fish_add_path $HOME/.bin/
-set -gx  LC_ALL en_US.UTF-8
-{{ end }}
-
 fish_add_path $HOME/.krew/bin
 fish_add_path $HOME/.cosmo/bin
 fish_add_path /opt/homebrew/bin
 
-{{ if eq .chezmoi.os "darwin" }}
-for file in ~/.config/fish/functions/work/*.fish
-    source $file
-#/usr/bin/keychain --nogui $HOME/.ssh/id_ed25519 &>/dev/null &
-#source $HOME/.keychain/rafa-desktop-fish &>/dev/null &
-end
+{{ if eq .chezmoi.os "darwin" -}}
+fish_add_path $HOME/.bin/
+fish_add_path $HOME/bin
+fish_add_path $HOME/.local/bin
+set -gx LC_ALL en_US.UTF-8
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 set -x WATSON_DIR ~/.config/watson
-fish_add_path $HOME/bin
 fish_ssh_agent
-fish_add_path $HOME/.local/bin
 {{ end }}
-
-alias cat="bat --style=plain"
-
-{{ if eq .chezmoi.os "linux" }}
 for file in ~/.config/fish/functions/personal/*.fish
     source $file
 end
+set -x TALOSCONFIG ~/code/rafaribe/home-ops/talos/clusterconfig/talosconfig
 
-{{ end }}
-
-if test -n "$GITLAB_TOKEN" -a -n "$GITHUB_TOKEN"
-  load_tokens
-end
-
+alias cat="bat --style=plain"
 alias gsi="git submodule update --init --recursive"
 set -gx INFLUX_SKIP_VERIFY true
+
 # Init Atuin
 atuin init fish --disable-up-arrow | sed 's/$(/(/g' | source
-load_garage

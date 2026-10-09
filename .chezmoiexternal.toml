@@ -1,0 +1,9 @@
+# tmux plugin manager. tmux.conf installs the plugins it declares on first launch.
+[".tmux/plugins/tpm"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tpm.git"
+    refreshPeriod = "168h"
+    [".tmux/plugins/tpm".clone]
+        args = ["--depth", "1"]
+    [".tmux/plugins/tpm".pull]
+        args = ["--ff-only"]

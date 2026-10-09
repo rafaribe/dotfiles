@@ -1,0 +1,3 @@
+#!/bin/sh
+# Leak guard: see .leak-guard/leak_guard.py. POSIX sh because git runs hooks with it.
+exec python3 "$(git rev-parse --show-toplevel)/.leak-guard/leak_guard.py" pre-commit

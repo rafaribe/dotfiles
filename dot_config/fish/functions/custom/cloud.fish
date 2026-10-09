@@ -1,20 +1,3 @@
-# TOTP for Email
-
-function totp
-    set -x BW_ITEM_ID c270feae-2089-4e71-8779-ae57013c9920
-    set -x PASS (bw get password $BW_ITEM_ID)
-    set -x OTP (bw get totp $BW_ITEM_ID)
-    echo -n "$PASS$OTP" | tr -d "\n" | pbcopy
-    echo "TOTP code copied to clipboard"
-end
-## Pulumi Logins
-function plrafaribe
-    echo "Logging In as rafaribe"
-    set -x PULUMI_ACCESS_TOKEN (bw get password pulumi_rafaribe_token)
-    pulumi logout
-    pulumi login
-end
-
 # Pulumi Aliases
 
 function pl
@@ -111,7 +94,7 @@ end
 
 alias ipfw fwip
 
-# Python 
+# Python
 set -Ux PYENV_ROOT $HOME/.pyenv
 fish_add_path $PYENV_ROOT/bin
 pyenv init - | source

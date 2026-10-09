@@ -1,6 +1,16 @@
 ---
+# The leak guard runs from .leak-guard/hooks (core.hooksPath, set by chezmoi).
+# This file is for `pre-commit run --all-files` on demand.
 fail_fast: false
 repos:
+  - repo: local
+    hooks:
+      - id: leak-guard
+        name: leak guard (tracked tree)
+        entry: python3 .leak-guard/leak_guard.py tree
+        language: system
+        pass_filenames: false
+        always_run: true
   - repo: https://github.com/zricethezav/gitleaks
     rev: v8.16.1
     hooks:

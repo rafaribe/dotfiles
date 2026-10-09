@@ -1,0 +1,74 @@
+[init]
+	defaultBranch = main
+
+[user]
+	name = Rafael Ribeiro
+	email = {{ .gitEmail }}
+	# Refuse to guess an identity from hostname/username — better to fail loudly
+	# than to author a commit as the wrong person.
+	useConfigOnly = true
+{{- if .gitSigningKey }}
+	signingKey = {{ .gitSigningKey }}
+{{- end }}
+
+[commit]
+	template = {{ .chezmoi.homeDir }}/.stCommitMsg
+{{- if .gitSigningKey }}
+	gpgSign = true
+{{- end }}
+
+{{ if .gitSigningKey -}}
+[gpg]
+	program = {{ lookPath "gpg" | default "/opt/homebrew/bin/gpg" }}
+{{ end -}}
+
+[core]
+	excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
+	pager = diff-so-fancy | less --tabs=4 -RFX
+	autocrlf = input
+
+[format]
+	signoff = true
+
+[pull]
+	rebase = true
+
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
+
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+
+[credential "https://github.com"]
+	helper =
+	helper = !{{ lookPath "gh" | default "/opt/homebrew/bin/gh" }} auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !{{ lookPath "gh" | default "/opt/homebrew/bin/gh" }} auth git-credential
+
+# Owned by other dotfiles sources layered on top of this one (absent here).
+[include]
+	path = ~/.config/git/config.extra
+
+# Machine-local keys (extra accounts, tool-written includeIf). Not managed by
+# chezmoi; last so it can override anything above.
+[include]
+	path = ~/.gitconfig.local

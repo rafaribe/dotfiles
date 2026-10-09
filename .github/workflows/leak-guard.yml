@@ -1,0 +1,14 @@
+# Server-side backstop for the leak guard hooks, which `--no-verify` can skip.
+name: leak-guard
+on:
+  push:
+  pull_request:
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 .leak-guard/leak_guard.py history HEAD
+      - run: python3 .leak-guard/leak_guard.py tree

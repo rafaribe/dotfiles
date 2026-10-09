@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""Enable the leak guard git hooks and pin this repo's commit identity.
+
+Run by chezmoi before it reads the source state, so every clone gets the hooks.
+Repo-local config wins over global includes, so a global identity or signing
+key from another dotfiles source cannot leak into this repo's commits.
+"""
+
+from __future__ import annotations
+
+import argparse
+import subprocess
+import sys
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parent.parent
+
+
+def set_config(key: str, value: str) -> None:
+    current = subprocess.run(
+        ["git", "-C", str(REPO), "config", "--local", "--get", key],
+        check=False,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if current != value:
+        subprocess.run(
+            ["git", "-C", str(REPO), "config", "--local", key, value], check=True
+        )
+
+
+def unset_config(key: str) -> None:
+    subprocess.run(
+        ["git", "-C", str(REPO), "config", "--local", "--unset", key],
+        check=False,
+        capture_output=True,
+    )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--email", required=True, help="commit email for this repo")
+    parser.add_argument(
+        "--signing-key", default="", help="GPG key ID; blank disables signing"
+    )
+    args = parser.parse_args()
+
+    if not (REPO / ".git").exists():
+        print(f"install-hooks: {REPO} is not a git checkout", file=sys.stderr)
+        return 0
+
+    set_config("core.hooksPath", ".leak-guard/hooks")
+    set_config("user.email", args.email)
+    if args.signing_key:
+        set_config("user.signingkey", args.signing_key)
+        set_config("commit.gpgsign", "true")
+    else:
+        unset_config("user.signingkey")
+        set_config("commit.gpgsign", "false")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
